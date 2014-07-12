@@ -1,25 +1,30 @@
 #!C:\Python27
 # -*- coding: utf-8 -*-
-import sys, os, time, datetime
-
 import random
-import pprint
 
 
 class Roulette():
+    """Provides a class to spin a roulette one or many times
+    (returning a number or a list of numbers) that can record its
+    spinned history."""
+
     def __init__(self):
-        self.currentNumber = None
-        self.histNumbers = []
+        self.current_number = None
+        self.hist_numbers = []
         self.bet = []
 
     def spin(self, times=1):
+        """Spin the roulette 1 or more times, adding every time
+        to roulette history and returning all numbers that came up
+        spinning it."""
+
         RV = []
 
         # spin roulette "times" times
         for i in xrange(times):
             num = random.randint(0, 36)
-            self.currentNumber = num
-            self.histNumbers.append(num)
+            self.current_number = num
+            self.hist_numbers.append(num)
             RV.append(num)
 
         # returns only a number (not a list) if spin 1 time
@@ -29,57 +34,65 @@ class Roulette():
         return RV
 
     def get_history(self):
-        return self.histNumbers
+        """Return history of spinned numbers."""
+        return self.hist_numbers
 
     def clear(self):
-        self.currentNumber = None
-        self.histNumbers = []
+        """"Clear roulette record, starting history again."""
+        self.current_number = None
+        self.hist_numbers = []
 
 
 class Paper():
+    """Provides a class to write down all numbers of roulette spins
+    and check for unmarked numbers that would close squares."""
+
     def __init__(self):
-        self.markedNumbers = set()
-        self.numMarks = 0
-        self.squareNumbers = set()
+        self.marked_numbers = set()
+        self.num_marks = 0
+        self.square_numbers = set()
 
     def __repr__(self):
-        string = "Marked numbers:\n\n" + str(self.markedNumbers)
-        string = string + "\n\nNumber of marks: " + str(self.numMarks)
-        string = string + "\n\nSquare numbers:\n\n" + str(self.squareNumbers)
+        string = "Marked numbers:\n\n" + str(self.marked_numbers)
+        string = string + "\n\nNumber of marks: " + str(self.num_marks)
+        string = string + "\n\nSquare numbers:\n\n" + str(self.square_numbers)
 
         return string
 
     def mark(self, numbers):
+        """Mark a number or several numbers in paper sheet. Check
+        squares after all."""
 
         if type(numbers) == int:
             numbers = [numbers]
 
         for i in numbers:
-            self.markedNumbers.add(i)
-            self.numMarks += 1
+            self.marked_numbers.add(i)
+            self.num_marks += 1
 
-        self.squareNumbers = self._check_squares()
+        self.square_numbers = self._check_squares()
 
     def clear(self):
-        self.markedNumbers = set()
-        self.numMarks = 0
-        self.squareNumbers = set()
+        """Clear paper sheet of any marks and start again."""
+        self.marked_numbers = set()
+        self.num_marks = 0
+        self.square_numbers = set()
 
     def get_num_marks(self):
-        return self.numMarks
+        return self.num_marks
 
     def get_marked_numbers(self):
-        return self.markedNumbers
+        return self.marked_numbers
 
     def get_square_numbers(self):
-        return self.squareNumbers
+        return self.square_numbers
 
     def _check_squares(self):
         """Check if any unmarked number would close a square if marked."""
         RV = set()
 
         totalNumbers = set(xrange(0, 37))
-        unmarkedNumbers = totalNumbers - self.markedNumbers
+        unmarkedNumbers = totalNumbers - self.marked_numbers
 
         # iterate through all unmarked numbers, looking for possible squares
         for unmarkedNumber in unmarkedNumbers:
@@ -91,7 +104,7 @@ class Paper():
             for square in squares:
 
                 # if potential square is marked, add unmarked numbers to RV
-                if square.issubset(self.markedNumbers):
+                if square.issubset(self.marked_numbers):
                     RV.add(unmarkedNumber)
 
         return RV
@@ -102,6 +115,9 @@ class Number():
         self.num = num
 
     def get_squares(self):
+        """Given a number (self), returns all numbers that would
+        close squares. RV is a list of lists, of numbers that would
+        close a square."""
         RV = list()
 
         # list of neighbor numbers clockwise starting from left
@@ -138,6 +154,8 @@ class Number():
         return RV
 
     def get_neighbors(self):
+        """Returns all neighbors of a number (self) in order from
+        left in clockwise turn way."""
         num = self.num
         RV = list()
 
@@ -186,6 +204,7 @@ class Number():
         return RV
 
     def _get_col(self):
+        """Get column of current number."""
         lNumbers = []
         rNumbers = []
 
@@ -212,6 +231,8 @@ class Number():
         return RV
 
     def _get_row_situation(self):
+        """Check row situation of current number (if its initial
+        row, or final row, or middle row."""
 
         if self.num in [1, 2, 3]:
             RV = "first"
@@ -249,6 +270,20 @@ class Number():
         return RV
 
 
+def standard_square_system():
+
+    pass
+
+
+def main():
+
+    print standard_square_system()
+
+
+# LLAMADO PRINCIPAL
+if __name__ == '__main__':
+
+    main()
 
 
 
